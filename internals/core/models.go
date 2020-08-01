@@ -14,9 +14,9 @@ type CorsConfig struct {
 
 type User struct {
 	ID        primitive.ObjectID `json:"id" bson:"_id"`
-	Username  string             `json:"username,omitempty" bson:"username,omitempty"`
-	IsAdmin   bool               `json:"isAdmin,omitempty" bson:"isAdmin,omitempty"`
-	IsDeleted bool               `json:"isDeleted,omitempty" bson:"isDeleted"` // Soft deletion flag. Cannot omit empty value as "false" is a zero value
+	Username  string             `json:"username" bson:"username"`
+	IsAdmin   bool               `json:"isAdmin" bson:"isAdmin"`
+	IsDeleted bool               `json:"isDeleted" bson:"isDeleted"` // Soft deletion flag. Cannot omit empty value as "false" is a zero value
 }
 
 // JwtClaims extends standard claims for our User model.
