@@ -33,22 +33,13 @@ func DoIfAdmin(next func(w http.ResponseWriter, r *http.Request, claims JwtClaim
 	})
 }
 
-// func AddCorsHeaders(next http.Handler, corsConfig CorsConfig) http.Handler {
+// Method field is handled by Gorilla
 func AddCorsHeaders(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Default configuration is quite loose...
 		corsAllowedHosts := "*"
 		corsAllowedHeaders := "*"
 		corsAllowedMethods := "*"
-		// if len(corsConfig.Methods) != 0 {
-		// 	corsAllowedMethods = corsConfig.Methods
-		// }
-		// if len(corsConfig.Hosts) != 0 {
-		// 	corsAllowedHosts = corsConfig.Hosts
-		// }
-		// if len(corsConfig.Headers) != 0 {
-		// 	corsAllowedHeaders = corsConfig.Headers
-		// }
 
 		// CORS
 		w.Header().Set("Access-Control-Allow-Origin", corsAllowedHosts)
@@ -56,7 +47,7 @@ func AddCorsHeaders(next http.Handler) http.Handler {
 		w.Header().Set("Access-Control-Allow-Headers", corsAllowedHeaders)
 
 		// Proceed for non-preflight requests only
-		if r.Method != "OPTIONS" {
+		if r.Method != http.MethodOptions {
 			next.ServeHTTP(w, r)
 		} else {
 			// Handle OPTIONS requests here
