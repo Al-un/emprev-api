@@ -2,6 +2,7 @@ package core
 
 import (
 	"context"
+	"os"
 
 	"github.com/Al-un/emprev-api/internals/utils"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -16,6 +17,13 @@ var (
 func init() {
 	dbConnectionString := "mongodb://localhost:27017"
 	dbName := "emprev"
+
+	if dbURLVar := os.Getenv("DB_URL"); dbURLVar != "" {
+		dbConnectionString = dbURLVar
+	}
+	if dbNameVar := os.Getenv("DB_NAME"); dbNameVar != "" {
+		dbName = dbNameVar
+	}
 
 	clientOptions := options.Client().ApplyURI(dbConnectionString)
 	MongoClient, err := mongo.Connect(context.TODO(), clientOptions)

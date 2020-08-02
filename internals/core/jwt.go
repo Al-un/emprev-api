@@ -3,6 +3,7 @@ package core
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -13,7 +14,10 @@ var jwtSecretKey string
 const jwtClaimsIssuer = "al-un.fr"
 
 func init() {
-	jwtSecretKey = "prout"
+	jwtSecretKey = "super-secret-jwt-key"
+	if secretVar := os.Getenv("SECRET_JWT_KEY"); secretVar != "" {
+		jwtSecretKey = secretVar
+	}
 }
 
 // GenerateJWT generate a JWT for a specific user with claims basically representing

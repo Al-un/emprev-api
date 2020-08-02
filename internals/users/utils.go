@@ -1,13 +1,19 @@
 package users
 
-import "crypto/sha512"
+import (
+	"crypto/sha512"
+	"os"
+)
 
 var (
 	pwdSecretSalt string
 )
 
 func init() {
-	pwdSecretSalt = "pouet"
+	pwdSecretSalt = "super-secret-password-salt"
+	if secretVar := os.Getenv("SECRET_PWD_SALT"); secretVar != "" {
+		pwdSecretSalt = secretVar
+	}
 }
 
 // HashPassword hashes a password with the "pwdSecretSalt" which is appended to
