@@ -57,9 +57,10 @@ func listReviews() (*[]Review, error) {
 
 func listReviewsByReviewerUserID(reviewerUserID string) (*[]Review, error) {
 	list := make([]Review, 0)
+	reviewerID, _ := primitive.ObjectIDFromHex(reviewerUserID)
 
 	filter := bson.M{
-		"reviewerUserId": reviewerUserID,
+		"reviewerUserId": reviewerID,
 	}
 	cur, err := dbReviewCollection.Find(context.TODO(), filter)
 	if err != nil {
