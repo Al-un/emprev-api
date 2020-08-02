@@ -80,12 +80,28 @@ func createUser(user userWithPassword) (*core.User, error) {
 func deleteUser(userID string) (int64, error) {
 	id, _ := primitive.ObjectIDFromHex(userID)
 	filter := bson.M{"_id": id}
-	d, err := dbUserCollection.DeleteMany(context.TODO(), filter, nil)
-	if err != nil {
-		return -1, nil
+
+	update := bson.M{
+		"$set": bson.M{
+			"isDeleted": true,
+		},
 	}
 
-	return d.DeletedCount, nil
+	res := dbUserCollection.FindOneAndUpdate(context.TODO(), filter, update)
+	err := res.Err()
+	if err != nil {
+		return -1, err
+	}
+
+	return 1, nil
+	// id, _ := primitive.ObjectIDFromHex(userID)
+	// filter := bson.M{"_id": id}
+	// d, err := dbUserCollection.DeleteMany(context.TODO(), filter, nil)
+	// if err != nil {
+	// 	return -1, nil
+	// }
+
+	// return d.DeletedCount, nil
 }
 
 func findActiveUsernamePassword(username, password string) (*core.User, error) {
@@ -153,8 +169,9 @@ func updateUser(userID string, user core.User) (core.User, error) {
 
 	update := bson.M{
 		"$set": bson.M{
-			"username": user.Username,
-			"isAdmin":  user.IsAdmin,
+			"username":  user.Username,
+			"isAdmin":   user.IsAdmin,
+			"isDeleted": user.IsDeleted,
 		},
 	}
 
