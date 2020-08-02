@@ -44,7 +44,7 @@ func handleListAllReviews(w http.ResponseWriter, r *http.Request, claims core.Jw
 }
 
 func handleUpdateReview(w http.ResponseWriter, r *http.Request, claims core.JwtClaims) {
-	reviewID := utils.GetVar(r, "reviewId")
+	reviewID := utils.GetVar(r, "reviewID")
 
 	var toUpdateReview Review
 	json.NewDecoder(r.Body).Decode(&toUpdateReview)
