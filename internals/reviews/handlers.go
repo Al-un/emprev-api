@@ -24,7 +24,17 @@ func handleCreateReview(w http.ResponseWriter, r *http.Request, claims core.JwtC
 func handleListReviews(w http.ResponseWriter, r *http.Request, claims core.JwtClaims) {
 	reviewerUserID := utils.GetVar(r, "reviewerUserID")
 
-	result, err := listReviews(reviewerUserID)
+	result, err := listReviewsByReviewerUserID(reviewerUserID)
+	if err != nil {
+		utils.HandleInternalError(w, r, err)
+		return
+	}
+
+	json.NewEncoder(w).Encode(result)
+}
+
+func handleListAllReviews(w http.ResponseWriter, r *http.Request, claims core.JwtClaims) {
+	result, err := listReviews()
 	if err != nil {
 		utils.HandleInternalError(w, r, err)
 		return

@@ -37,7 +37,25 @@ func createReview(review Review) (*Review, error) {
 	return &newReview, nil
 }
 
-func listReviews(reviewerUserID string) (*[]Review, error) {
+func listReviews() (*[]Review, error) {
+	list := make([]Review, 0)
+
+	filter := bson.M{}
+	cur, err := dbReviewCollection.Find(context.TODO(), filter)
+	if err != nil {
+		return nil, err
+	}
+
+	var next Review
+	for cur.Next(context.TODO()) {
+		cur.Decode(&next)
+		list = append(list, next)
+	}
+
+	return &list, nil
+}
+
+func listReviewsByReviewerUserID(reviewerUserID string) (*[]Review, error) {
 	list := make([]Review, 0)
 
 	filter := bson.M{
