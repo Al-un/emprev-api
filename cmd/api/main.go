@@ -45,6 +45,9 @@ func main() {
 		return nil
 	})
 
+	users.CreateRootIfNotExist()
+	fmt.Printf("Hash: %v\n", users.HashPassword("root"))
+
 	utils.ApiLogger.Infof("[Server] Starting server on port %d...", serverPort)
 	utils.ApiLogger.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", serverPort), router))
 }

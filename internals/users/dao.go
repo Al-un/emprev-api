@@ -24,9 +24,13 @@ func init() {
 
 	// ensure superadmin is always defined
 	dbSuperAdminUserName = "root"
+}
+
+func CreateRootIfNotExist() {
 	filter := bson.M{
 		"username": dbSuperAdminUserName,
 	}
+
 	var superAdmin core.User
 	if err := dbUserCollection.FindOne(context.TODO(), filter).Decode(&superAdmin); err != nil {
 		superAdmin := userWithPassword{
@@ -52,7 +56,7 @@ func init() {
 }
 
 func createUser(user userWithPassword) (*core.User, error) {
-	hashedPassword := hashPassword(user.Password)
+	hashedPassword := HashPassword(user.Password)
 
 	user.ID = primitive.NewObjectID()
 	user.IsDeleted = false
@@ -85,7 +89,7 @@ func deleteUser(userID string) (int64, error) {
 }
 
 func findActiveUsernamePassword(username, password string) (*core.User, error) {
-	hashedPassword := hashPassword(password)
+	hashedPassword := HashPassword(password)
 
 	var user userWithPassword
 

@@ -6,5 +6,5 @@ import (
 )
 
 func TestPouet(t *testing.T) {
-	fmt.Printf(hashPassword(dbSuperAdminUserName))
+	fmt.Printf(HashPassword(dbSuperAdminUserName))
 }
