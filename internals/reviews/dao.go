@@ -46,8 +46,8 @@ func listReviews() (*[]Review, error) {
 		return nil, err
 	}
 
-	var next Review
 	for cur.Next(context.TODO()) {
+		var next Review
 		cur.Decode(&next)
 		list = append(list, next)
 	}
@@ -67,8 +67,8 @@ func listReviewsByReviewerUserID(reviewerUserID string) (*[]Review, error) {
 		return nil, err
 	}
 
-	var next Review
 	for cur.Next(context.TODO()) {
+		var next Review
 		cur.Decode(&next)
 		list = append(list, next)
 	}

@@ -121,8 +121,8 @@ func listUsers() (*[]core.User, error) {
 		return nil, err
 	}
 
-	var next core.User
 	for cur.Next(context.TODO()) {
+		var next core.User
 		cur.Decode(&next)
 		users = append(users, next)
 	}
