@@ -10,6 +10,6 @@ import (
 func LoadEndpoints(router *mux.Router) {
 	router.Handle("/reviews/", core.DoIfAdmin(handleListAllReviews)).Methods(http.MethodGet, http.MethodOptions)
 	router.Handle("/reviews/", core.DoIfAdmin(handleCreateReview)).Methods(http.MethodPost, http.MethodOptions)
-	router.Handle("/reviews/{reviewerUserId}/", core.DoIfLogged(handleListReviews)).Methods(http.MethodGet, http.MethodOptions)
-	router.Handle("/reviews/{reviewerUserId}/{reviewId}/", core.DoIfLogged(handleUpdateReview)).Methods(http.MethodPatch, http.MethodOptions)
+	router.Handle("/reviews/{reviewerUserID}/", core.DoIfLogged(handleListReviews)).Methods(http.MethodGet, http.MethodOptions)
+	router.Handle("/reviews/{reviewerUserID}/{reviewID}/", core.DoIfLogged(handleUpdateReview)).Methods(http.MethodPatch, http.MethodOptions)
 }

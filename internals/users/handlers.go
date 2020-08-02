@@ -22,7 +22,7 @@ func handleCreateUser(w http.ResponseWriter, r *http.Request, claims core.JwtCla
 }
 
 func handleDeleteUser(w http.ResponseWriter, r *http.Request, claims core.JwtClaims) {
-	userID := utils.GetVar(r, "userId")
+	userID := utils.GetVar(r, "userID")
 	deleteCount, err := deleteUser(userID)
 
 	if err != nil {
@@ -38,7 +38,7 @@ func handleDeleteUser(w http.ResponseWriter, r *http.Request, claims core.JwtCla
 }
 
 func handleGetUser(w http.ResponseWriter, r *http.Request, claims core.JwtClaims) {
-	userID := utils.GetVar(r, "userId")
+	userID := utils.GetVar(r, "userID")
 	user, err := getUser(userID)
 	if err != nil {
 		utils.HandleInternalError(w, r, err)
@@ -96,7 +96,7 @@ func handleUpdateUser(w http.ResponseWriter, r *http.Request, claims core.JwtCla
 	var updatingUser core.User
 	json.NewDecoder(r.Body).Decode(&updatingUser)
 
-	userID := utils.GetVar(r, "userId")
+	userID := utils.GetVar(r, "userID")
 	result, err := updateUser(userID, updatingUser)
 	if err != nil {
 		utils.HandleInternalError(w, r, err)
