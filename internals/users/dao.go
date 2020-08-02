@@ -2,6 +2,7 @@ package users
 
 import (
 	"context"
+	"errors"
 
 	"github.com/Al-un/emprev-api/internals/core"
 	"github.com/Al-un/emprev-api/internals/utils"
@@ -33,6 +34,7 @@ func init() {
 				ID:        primitive.NewObjectID(),
 				IsAdmin:   true,
 				IsDeleted: false,
+				IsRoot:    true,
 				Username:  dbSuperAdminUserName,
 			},
 			Password: dbSuperAdminUserName,
@@ -131,6 +133,11 @@ func listUsers() (*[]core.User, error) {
 }
 
 func updateUser(userID string, user core.User) (core.User, error) {
+	// Better than nothing shield: data can be manipulated by another client
+	if user.IsRoot {
+		return core.User{}, errors.New("Do not modify root user")
+	}
+
 	id, _ := primitive.ObjectIDFromHex(userID)
 	filter := bson.M{"_id": id}
 

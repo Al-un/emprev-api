@@ -16,6 +16,7 @@ type User struct {
 	ID        primitive.ObjectID `json:"id" bson:"_id"`
 	Username  string             `json:"username" bson:"username"`
 	IsAdmin   bool               `json:"isAdmin" bson:"isAdmin"`
+	IsRoot    bool               `json:"isRoot,omitempty" bson:"isRoot,omitempty"`
 	IsDeleted bool               `json:"isDeleted" bson:"isDeleted"` // Soft deletion flag. Cannot omit empty value as "false" is a zero value
 }
 
