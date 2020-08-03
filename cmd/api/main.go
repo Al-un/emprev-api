@@ -33,6 +33,7 @@ func main() {
 
 	users.LoadEndpoints(router)
 	reviews.LoadEndpoints(router)
+	router.HandleFunc("/", core.HandleHealthcheck).Methods(http.MethodGet, http.MethodOptions)
 	router.Use(mux.CORSMethodMiddleware(router))
 
 	router.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
