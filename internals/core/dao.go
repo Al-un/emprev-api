@@ -15,7 +15,7 @@ var (
 )
 
 func init() {
-	dbConnectionString := "mongodb://localhost:27017"
+	dbConnectionString := "mongodb://localhost:27017/emprev"
 	dbName := "emprev"
 
 	if dbURLVar := os.Getenv("DB_URL"); dbURLVar != "" {
@@ -25,6 +25,7 @@ func init() {
 		dbName = dbNameVar
 	}
 
+	utils.ApiLogger.Infof("Connecting to DB %s\n", dbConnectionString)
 	clientOptions := options.Client().ApplyURI(dbConnectionString)
 	MongoClient, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
