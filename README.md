@@ -1,10 +1,12 @@
+[![Go Report Card](https://goreportcard.com/badge/github.com/Al-un/emprev-api)](https://goreportcard.com/report/github.com/Al-un/emprev-api)
+
 # EmpRev API <!-- omit in toc -->
 
 - [Run the API](#run-the-api)
   - [Environment variables](#environment-variables)
 - [Project structure](#project-structure)
   - [File and folder structure](#file-and-folder-structure)
-  - [Service layer](#service-layer)
+  - [Application layers](#application-layers)
 - [Deployment to GCP](#deployment-to-gcp)
 
 ## Run the API
@@ -34,7 +36,7 @@ Available environment variables are:
 
 This project follows the [Standard Go project layout](https://github.com/golang-standards/project-layout) as much as possible. The `main.go` should be in `cmd/api/` (for example) but is located at the root to faciliate GCP deployment. Within `internals/` each package represents a "module". Each module, when involving a business concept (_"users"_ and _"reviews"_) is meant to follow a _Service layer pattern_ approach
 
-### Service layer
+### Application layers
 
 Each module is divided into specific layer with a dedicated responsibility per layer:
 
