@@ -22,10 +22,16 @@ func init() {
 	dbUserCollectionName = "emprev_users"
 	dbUserCollection = core.MongoDatabase.Collection(dbUserCollectionName)
 
-	// ensure superadmin is always defined
+	// ensure superadmin is always defined.
 	dbSuperAdminUserName = "root"
 }
 
+// CreateRootIfNotExist creates a root user if it does not exists. Such user
+// is usually used once, during the first deployment, but in the case of this
+// prototype, it is not meant to be deleted / disabled.
+//
+// Root username cannot be parametered and credentials always default to
+// `root`/`root`
 func CreateRootIfNotExist() {
 	filter := bson.M{
 		"username": dbSuperAdminUserName,
@@ -46,12 +52,12 @@ func CreateRootIfNotExist() {
 		insert, err := createUser(superAdmin)
 
 		if err == nil {
-			utils.ApiLogger.Infof("Successfully created super admin user with ID %v\n", insert.ID)
+			utils.APILogger.Infof("Successfully created super admin user with ID %v\n", insert.ID)
 		} else {
-			utils.ApiLogger.Fatalf("Error when creating super admin user, application cannot continue\n")
+			utils.APILogger.Fatalf("Error when creating super admin user, application cannot continue\n")
 		}
 	} else {
-		utils.ApiLogger.Infof("Super admin user <%s> already exists\n", dbSuperAdminUserName)
+		utils.APILogger.Infof("Super admin user <%s> already exists\n", dbSuperAdminUserName)
 	}
 }
 
@@ -77,6 +83,10 @@ func createUser(user userWithPassword) (*core.User, error) {
 	return &newUser, nil
 }
 
+// User deletion is using soft-deletion to avoid cascading deletion to related
+// reviews. Hard-delete code is kept for reference.
+//
+// TODO: returns the deletion count
 func deleteUser(userID string) (int64, error) {
 	id, _ := primitive.ObjectIDFromHex(userID)
 	filter := bson.M{"_id": id}
@@ -152,8 +162,13 @@ func listUsers() (*[]core.User, error) {
 	return &users, nil
 }
 
+// Even if the associated HTTP method is a PUT, do not fully override the user
+// in DB: that would cause issue for the password field and other fields such
+// as `createdAt` if those fields were to be used
 func updateUser(userID string, user core.User) (core.User, error) {
-	// Better than nothing shield: data can be manipulated by another client
+	// Better-than-nothing shield: data can be manipulated by another client.
+	// A proper way would be checking the `isRoot` property based on the
+	// user ID
 	if user.IsRoot {
 		return core.User{}, errors.New("Do not modify root user")
 	}
@@ -164,11 +179,13 @@ func updateUser(userID string, user core.User) (core.User, error) {
 	var returnOpt options.ReturnDocument = 1
 
 	options := &options.FindOneAndUpdateOptions{
+		// request the updated document to avoid firing another find request
 		ReturnDocument: &(returnOpt),
 	}
 
 	update := bson.M{
 		"$set": bson.M{
+			// Partial updated here
 			"username":  user.Username,
 			"isAdmin":   user.IsAdmin,
 			"isDeleted": user.IsDeleted,

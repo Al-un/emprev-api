@@ -6,12 +6,15 @@ import (
 )
 
 // CorsConfig allows a flexible way to handle CORS stuff
+//
+// TODO: check if obsolete
 type CorsConfig struct {
 	Hosts   string
 	Methods string
 	Headers string
 }
 
+// User is the most basic representation of an user.
 type User struct {
 	ID        primitive.ObjectID `json:"id" bson:"_id"`
 	Username  string             `json:"username" bson:"username"`

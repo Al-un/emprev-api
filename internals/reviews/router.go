@@ -7,6 +7,8 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// LoadEndpoints maps the different "reviews" module handlers to an endpoint
+// path and method.
 func LoadEndpoints(router *mux.Router) {
 	router.Handle("/reviews/", core.DoIfAdmin(handleListAllReviews)).Methods(http.MethodGet, http.MethodOptions)
 	router.Handle("/reviews/", core.DoIfAdmin(handleCreateReview)).Methods(http.MethodPost, http.MethodOptions)

@@ -10,11 +10,14 @@ import (
 )
 
 var (
-	MongoClient   *mongo.Client
+	// MongoClient is the Mongo client instance
+	MongoClient *mongo.Client
+	// MongoDatabase is the EmpRev database instance in the MongoDB
 	MongoDatabase *mongo.Database
 )
 
 func init() {
+	// --- Parameters definition
 	dbConnectionString := "mongodb://localhost:27017/emprev"
 	dbName := "emprev"
 
@@ -25,20 +28,21 @@ func init() {
 		dbName = dbNameVar
 	}
 
-	utils.ApiLogger.Infof("Connecting to DB %s\n", dbConnectionString)
+	// --- Connection
+	utils.APILogger.Infof("Connecting to DB %s\n", dbConnectionString)
 	clientOptions := options.Client().ApplyURI(dbConnectionString)
 	MongoClient, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
-		utils.ApiLogger.Fatalf("MongoDB connection error to %v\n", dbConnectionString)
+		utils.APILogger.Fatalf("MongoDB connection error to %v\n", dbConnectionString)
 		return
 	}
 
-	// Check the connection
+	// --- Check the connection
 	err = MongoClient.Ping(context.TODO(), nil)
 	if err != nil {
-		utils.ApiLogger.Fatalf("MongoDB ping to %v failed. Connection error\n", dbConnectionString)
+		utils.APILogger.Fatalf("MongoDB ping to %v failed. Connection error\n", dbConnectionString)
 	}
 
-	// Init the database instance
+	// --- Init the database instance
 	MongoDatabase = MongoClient.Database(dbName)
 }

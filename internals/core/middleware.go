@@ -4,6 +4,8 @@ import (
 	"net/http"
 )
 
+// DoIfLogged is the authentication guard middleware which only allows
+// access to authenticated users
 func DoIfLogged(next func(w http.ResponseWriter, r *http.Request, claims JwtClaims)) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		claims, httpStatus := DecodeJWT(r)
@@ -16,6 +18,8 @@ func DoIfLogged(next func(w http.ResponseWriter, r *http.Request, claims JwtClai
 	})
 }
 
+// DoIfAdmin is the authorization guard middleware which allows an handler
+// to be executed only if the JWT contains a valid admin profile
 func DoIfAdmin(next func(w http.ResponseWriter, r *http.Request, claims JwtClaims)) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		claims, httpStatus := DecodeJWT(r)
@@ -33,6 +37,9 @@ func DoIfAdmin(next func(w http.ResponseWriter, r *http.Request, claims JwtClaim
 	})
 }
 
+// AddCorsHeaders provides the necessary CORS headers for each request and
+// also handle OPTIONS requests.
+//
 // Method field is handled by Gorilla
 func AddCorsHeaders(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

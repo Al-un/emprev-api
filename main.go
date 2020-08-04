@@ -14,18 +14,20 @@ import (
 )
 
 func main() {
+	// --- Port definition
 	serverPort := 8000
 
 	if envServerPort := os.Getenv("PORT"); envServerPort != "" {
 		serverPortAsInt, err := strconv.Atoi(envServerPort)
 		if err != nil {
-			utils.ApiLogger.Fatalf("Invalid server port %v\n", envServerPort)
+			utils.APILogger.Fatalf("Invalid server port %v\n", envServerPort)
 			return
 		}
 
 		serverPort = serverPortAsInt
 	}
 
+	// --- Router setup
 	router := mux.NewRouter()
 
 	router.Use(core.AddCorsHeaders)
@@ -36,18 +38,21 @@ func main() {
 	router.HandleFunc("/", core.HandleHealthcheck).Methods(http.MethodGet, http.MethodOptions)
 	router.Use(mux.CORSMethodMiddleware(router))
 
+	// For debugging: display all endpoints paths and methods
 	router.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
 		m, err := route.GetMethods()
 		t, err := route.GetPathTemplate()
 		if err != nil {
 			return err
 		}
-		utils.ApiLogger.Infof("%-6s: %s\n", m, t)
+		utils.APILogger.Infof("%-6s: %s\n", m, t)
 		return nil
 	})
 
+	// --- One-time setup
 	users.CreateRootIfNotExist()
 
-	utils.ApiLogger.Infof("[Server] Starting server on port %d...", serverPort)
-	utils.ApiLogger.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", serverPort), router))
+	// --- Go!
+	utils.APILogger.Infof("[Server] Starting server on port %d...", serverPort)
+	utils.APILogger.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", serverPort), router))
 }

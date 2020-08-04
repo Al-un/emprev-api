@@ -17,7 +17,7 @@ func init() {
 }
 
 // HashPassword hashes a password with the "pwdSecretSalt" which is appended to
-// the password as a salt
+// the password as a salt. Hash is done with SHA-512.
 func HashPassword(clearPassword string) string {
 	h := sha512.New()
 	h.Write([]byte(clearPassword))
@@ -25,5 +25,4 @@ func HashPassword(clearPassword string) string {
 	hashedPassword := string(h.Sum(nil))
 
 	return hashedPassword
-	// return clearPassword
 }

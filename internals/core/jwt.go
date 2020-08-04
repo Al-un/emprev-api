@@ -53,6 +53,8 @@ func GenerateJWT(user User) (string, error) {
 	return tokenString, nil
 }
 
+// DecodeJWT decodes the JWT from the Authorization header for a given request
+// and returns the JWT claims
 func DecodeJWT(r *http.Request) (*JwtClaims, int) {
 	// Fetch the Authorization header
 	authHeaders := r.Header["Authorization"]

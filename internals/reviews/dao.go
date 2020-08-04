@@ -40,13 +40,15 @@ func createReview(review Review) (*Review, error) {
 func listReviews() (*[]Review, error) {
 	list := make([]Review, 0)
 
-	filter := bson.M{}
+	filter := bson.M{} // empty filter
 	cur, err := dbReviewCollection.Find(context.TODO(), filter)
 	if err != nil {
 		return nil, err
 	}
 
 	for cur.Next(context.TODO()) {
+		// make sure the cursor decodes in a fresh variable to avoid keeping
+		// values from the previous cursor
 		var next Review
 		cur.Decode(&next)
 		list = append(list, next)
@@ -76,6 +78,8 @@ func listReviewsByReviewerUserID(reviewerUserID string) (*[]Review, error) {
 	return &list, nil
 }
 
+// Employee can only submit a request and cannot change its properties
+// (reviewers / reviewed / period)
 func updateReview(reviewID string, review Review) (*Review, error) {
 	id, _ := primitive.ObjectIDFromHex(reviewID)
 	filter := bson.M{"_id": id}
@@ -88,6 +92,7 @@ func updateReview(reviewID string, review Review) (*Review, error) {
 
 	update := bson.M{
 		"$set": bson.M{
+
 			"score":   review.Score,
 			"comment": review.Comment,
 		},
