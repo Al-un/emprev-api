@@ -13,7 +13,7 @@
 
 ```
 git clone https://github.com/Al-un/emprev-api.git
-cd emprev-api.git
+cd emprev-api
 
 go run main.go
 ```
